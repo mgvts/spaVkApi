@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: "/spaVkApi/",
+  publicPath: "/spa_vk_api/",
 };

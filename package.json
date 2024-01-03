@@ -1,5 +1,5 @@
 {
-  "name": "testuno",
+  "name": "spa_vk_api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "serve": "^14.2.1",
+    "travis": "^0.1.1",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"
   },

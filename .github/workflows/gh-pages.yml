@@ -32,5 +32,8 @@ jobs:
       - name: build
         run: npm run build-only
 
-      - name: serve
-        run: serve -s dist
+      - name: git add
+        run: git add dist && git commit -m 'adding dist subtree'
+        
+      - name: git push
+        run: git subtree push --prefix dist origin gh-pages

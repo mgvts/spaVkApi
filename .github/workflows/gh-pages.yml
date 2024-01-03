@@ -28,7 +28,7 @@ jobs:
       - name: init
         run: |
           git config --global user.email "vladtselikov1@gmail.com"
-          git config --global user.name "Vlaislav Tselikov"
+          git config --global user.name "mgvts"
 
       # Runs a single command using the runners shell
       - name:  npm i
@@ -41,4 +41,4 @@ jobs:
         run: git add dist && git commit -m 'adding dist subtree'
         
       - name: git push
-        run: git subtree push --prefix dist origin gh-pages
+        run: git push -f git@github.com:mgvts/spaVkApi.git main:gh-pages

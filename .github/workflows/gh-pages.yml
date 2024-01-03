@@ -25,6 +25,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: init
+        run: |
+          git config --global user.email "vladtselikov1@gmail.com"
+          git config --global user.name "Vlaislav Tselikov"
+
       # Runs a single command using the runners shell
       - name:  npm i
         run: npm i

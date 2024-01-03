@@ -33,4 +33,4 @@ jobs:
         run: npm run build-only
 
       - name: serve
-        run: npm serve -s dist
+        run: serve -s dist

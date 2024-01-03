@@ -9,6 +9,7 @@
 </script>
 
 <template>
+<div>hi</div>
 <RouterView/>
 </template>
 

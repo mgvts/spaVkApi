@@ -1,10 +1,15 @@
-<script setup lang="ts">
+<script lang="ts">
+    import { RouterView } from 'vue-router'
+    import {defineComponent} from "vue";
+
+    export default defineComponent({
+        name: 'App',
+        components: { RouterView },
+    })
 </script>
 
 <template>
-<div class="wrapper">
-  <div>hello </div>
-</div>
+<RouterView/>
 </template>
 
 <style scoped>

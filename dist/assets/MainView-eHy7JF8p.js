@@ -1,0 +1,1 @@
+import{d as e,_ as n,o,c as p,r as d,a as f}from"./index-pJRz8PLX.js";const m=e({name:"Finder"});function $(r,t,c,s,a,i){return o(),p("div",null," here finder ")}const l=n(m,[["render",$]]),u=e({name:"MainView",components:{Finder:l}});function x(r,t,c,s,a,i){const _=d("Finder");return o(),f(_)}const h=n(u,[["render",x]]);export{h as default};

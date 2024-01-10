@@ -11,7 +11,8 @@ export type VkUser = {
     photo_50: URL,
     sex: Sex,
     friends_count?: number,
-    sourceFriends?: VkUser[]
+    sourceFriends?: VkUser[],
+    deactivated ?: string
 }
 /*
 https://dev.vk.com/ru/reference/objects/post

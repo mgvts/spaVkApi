@@ -1,36 +1,47 @@
 <script lang=ts>
-    import {defineComponent, PropType} from 'vue';
+    import {CSSProperties, defineComponent, PropType} from 'vue';
     import {VkUser} from "@/api/types/vk";
     import UserInline from "@/components/UserInline.vue";
     import * as _ from "lodash"
     import UserInlineList from "@/components/UserInlineList.vue";
+    import {gradRed2Green} from "@/api/utils/util";
 
     export default defineComponent({
         name: "FriendsMain",
         components: {UserInline, UserInlineList},
+        props: {
+            users: {
+                type: Object as PropType<VkUser[]>,
+                require: true
+            },
+            totalSource: Number
+        },
         computed: {
             orderedUsers: function (): VkUser[] {
                 let orderByName = _.orderBy(this.users, 'first_name')
                 return _.orderBy(orderByName, 'last_name')
             }
         },
-        props: {
-            users: {
-                type: [] as PropType<VkUser[]>,
-                require: true
-            }
-        },
         data() {
             return {}
         },
-        methods: {},
+        methods: {
+            gradFunc(friendsCount: number): CSSProperties {
+                return {
+                    backgroundColor: gradRed2Green(friendsCount / this.totalSource)
+                } as CSSProperties
+            }
+        },
     })
 </script>
 
 <template>
-<div>
-  <button @click.prevent="$emit('unbuild')">back</button>
+<div class="friends-page">
+  <div class="header">
+    <div> source friends</div>
+  </div>
   <UserInlineList
+    :grad="gradFunc"
     :users="orderedUsers"
     @tap="u => $emit('chooseUser', u)"
   />
@@ -39,5 +50,10 @@
 </template>
 
 <style scoped>
+.friends-page {
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
 
+}
 </style>

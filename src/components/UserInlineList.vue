@@ -7,22 +7,64 @@
         name: "UserInlineList",
         components: {UserInline},
         props: {
-            users: [] as PropType<VkUser[]>
+            users: {
+                type: Object as PropType<VkUser[]>,
+                default: []
+            },
+            canDelete: Boolean,
+            grad: {
+                type: Function,
+                default: o => o
+            }
+        },
+        computed: {
+            cssRuleImpl() {
+                return {
+                    backgroundColor: 'inherit'
+                }
+            }
+        },
+        data() {
+            return {
+
+            }
         }
     })
 </script>
 
 <template>
-<div>
+<div class="user-inline-list">
   <UserInline
+    v-if="users.length > 0"
+    :canDelete="canDelete"
     v-for="user in users"
+    :grad="grad(user.sourceFriends?.length) || cssRuleImpl"
     :key="user.id"
     :user=user
     @tap="u => $emit('tap', u)"
+    @del="u => $emit('del', u)"
   />
+  <div v-else>
+    now here no users
+  </div>
 </div>
 </template>
 
 <style scoped>
+.user-inline-list {
+  height: 80vh;
+  overflow: auto;
+  overflow-x: hidden;
+}
 
+.user-inline-list::-webkit-scrollbar {
+  color: #48464c;
+  display: block;
+  width: 5px;
+}
+
+.user-inline-list::-webkit-scrollbar-thumb {
+  border-radius: 2rem;
+  background: #48464C;
+}
 </style>

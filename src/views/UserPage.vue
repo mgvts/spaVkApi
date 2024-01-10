@@ -74,13 +74,15 @@
 </template>
 
 <style scoped>
+.content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .wall {
   display: flex;
   flex-direction: column;
   width: 20rem;
-}
-.content {
-  display: flex;
-  flex-direction: row;
 }
 </style>

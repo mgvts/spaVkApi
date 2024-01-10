@@ -11,18 +11,20 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "serve": "npm run build && serve -s dist",
-    "deploy": "sh deploy.sh"
+    "serve": "npm run build-only && serve -s dist",
+    "deploy": "sh deploy.sh",
+    "vue-cli-serve": "vue-cli-service serve --https true"
   },
   "dependencies": {
-    "@vk-io/authorization": "^1.4.1",
-    "@vkid/sdk": "^1.0.2",
+    "@vkontakte/superappkit": "^1.61.1",
     "axios": "^1.6.4",
     "fs.promises": "^0.1.2",
     "lodash": "^4.17.21",
+    "mkcert": "^3.2.0",
     "serve": "^14.2.1",
-    "vk-io": "^4.8.3",
+    "vite-plugin-mkcert": "^1.17.2",
     "vue": "^3.3.11",
+    "vue-cli": "^2.9.6",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

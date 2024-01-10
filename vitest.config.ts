@@ -5,7 +5,7 @@ import viteConfig from './vite.config'
 export default mergeConfig(
     viteConfig,
     defineConfig({
-        base: process.env.VITE_PROD_APP_URL,
+        base: '/spa_vk_api/',
         test: {
             environment: 'jsdom',
             exclude: [...configDefaults.exclude, 'e2e/*'],

@@ -1,3 +1,5 @@
 module.exports = {
-  publicPath: "/spa_vk_api/",
+  publicPath: process.env.NODE_ENV === 'production'
+      ? '/spa_vk_api/'
+      : '/'
 };

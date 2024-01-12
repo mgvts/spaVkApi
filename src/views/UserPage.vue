@@ -42,7 +42,7 @@
   <div>
     <button @click.prevent="$emit('back')">back</button>
   </div>
-  <div>
+  <div class="user-info">
     <UserInline :user="user"/>
   </div>
   <div class="content">
@@ -78,6 +78,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.user-info {
+  display: flex;
+  width: 20rem;
 }
 
 .wall {

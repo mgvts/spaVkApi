@@ -56,8 +56,6 @@
 <style scoped>
 .user-inline-list {
   height: 80vh;
-  overflow: auto;
-  overflow-x: hidden;
 }
 
 .user-inline-list::-webkit-scrollbar {

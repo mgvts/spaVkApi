@@ -1,5 +1,4 @@
 import axios, {AxiosError} from 'axios'
-import config from "@/router/config";
 
 export class ApiController {
     protected static async _post(url, data) {

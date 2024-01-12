@@ -6,7 +6,7 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: '/spa_vk_api/',
+    // base: '/spa_vk_api/',
     plugins: [
         vue(),
         mkcert()

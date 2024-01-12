@@ -32,7 +32,7 @@
                 // doesn't work if user have more than 5000 friends
                 (() => (VK.Api.call("friends.get", {
                     user_id: sourceUser.id,
-                    fields: "photo_50,sex",
+                    fields: "photo_50,sex,bdate",
                     v:  import.meta.env.VITE_VK_VER,
                 }, (r) => {
                     this.updateFriends(sourceUser, (r.response.items as VkUser[]).filter(u => !u.deactivated))

@@ -1,3 +1,4 @@
+import type {dateString} from "@/api/types/vk";
 function colorGradient(fadeFraction, rgbColor1, rgbColor2, rgbColor3) {
     let color1 = rgbColor1;
     let color2 = rgbColor2;
@@ -27,6 +28,7 @@ function colorGradient(fadeFraction, rgbColor1, rgbColor2, rgbColor3) {
 
     return 'rgb(' + gradient.red + ',' + gradient.green + ',' + gradient.blue + ')';
 }
+
 export function gradRed2Green(fadeFraction) {
     let lowColor = {
         red: 217,
@@ -46,4 +48,19 @@ export function gradRed2Green(fadeFraction) {
     return colorGradient(fadeFraction, lowColor, mediumColor, highColor)
 }
 
+
+export function bdate2Date(bdate: dateString): Date {
+    const [d, m, y] = bdate.split('.')
+    return  new Date(+y, +m - 1, +d - 1) // нумерация месяцев начинается с нуля
+
+}
+export function countAge(bdate: dateString | undefined): number | null {
+    if (!bdate) return null
+    const date = bdate2Date(bdate)
+    const now = new Date()
+    return (now.getFullYear() - date.getFullYear())
+        + (now >= new Date(now.getFullYear(), date.getMonth(), date.getDate())
+            ? 0
+            : -1)
+}
 

@@ -2,6 +2,12 @@ export type VkMapUsers = {
     id: VkUser
 }
 /*
+https://dev.vk.com/ru/reference/objects/user#bdate
+// D.M.YYYY
+ */
+export type dateString = string
+/*
+
 https://dev.vk.com/ru/reference/objects/user
  */
 export type VkUser = {
@@ -12,7 +18,8 @@ export type VkUser = {
     sex: Sex,
     friends_count?: number,
     sourceFriends?: VkUser[],
-    deactivated ?: string
+    deactivated ?: string,
+    bdate ?: dateString
 }
 /*
 https://dev.vk.com/ru/reference/objects/post

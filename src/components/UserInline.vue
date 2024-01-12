@@ -2,6 +2,7 @@
     import {defineComponent, PropType} from 'vue';
     import type {VkUser} from "@/api/types/vk";
     import {Sex} from "@/api/types/vk";
+    import {countAge} from "@/api/utils/util";
 
     export default defineComponent({
         name: "UserInline",
@@ -11,18 +12,23 @@
                 type: Boolean,
                 default: false
             },
-            grad: Object
+            grad: Object,
+            ageFlag: {
+                type: Boolean,
+                default: false
+            }
         },
         computed: {
-          gradStyle() {
-              return this.grad
-          }
+            gradStyle() {
+                return this.grad
+            }
         },
         data() {
             return {
                 first: this.user.first_name,
                 last: this.user.last_name,
                 sex: Sex[this.user.sex],
+                age: this.ageFlag ? countAge(this.user.bdate) : null
             }
         },
         methods: {
@@ -40,6 +46,7 @@
     <div class="first">{{ first }}</div>
     <div class="last">{{ last }}</div>
     <div class="sex">{{ sex }}</div>
+    <div v-if="ageFlag && age">{{ age }}</div>
   </div>
   <div v-if="canDelete"
        class="cross"

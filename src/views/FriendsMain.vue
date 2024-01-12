@@ -41,6 +41,7 @@
     <div> source friends</div>
   </div>
   <UserInlineList
+    :age="true"
     :grad="gradFunc"
     :users="orderedUsers"
     @tap="u => $emit('chooseUser', u)"

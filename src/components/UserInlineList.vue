@@ -15,6 +15,10 @@
             grad: {
                 type: Function,
                 default: o => o
+            },
+            age: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
@@ -25,9 +29,7 @@
             }
         },
         data() {
-            return {
-
-            }
+            return {}
         }
     })
 </script>
@@ -41,6 +43,7 @@
     :grad="grad(user.sourceFriends?.length) || cssRuleImpl"
     :key="user.id"
     :user=user
+    :ageFlag="age"
     @tap="u => $emit('tap', u)"
     @del="u => $emit('del', u)"
   />

@@ -28,7 +28,7 @@
                 first: this.user.first_name,
                 last: this.user.last_name,
                 sex: Sex[this.user.sex],
-                age: this.ageFlag ? countAge(this.user.bdate) : null
+                age: this.ageFlag ? countAge(this.user.bdate) : null,
             }
         },
         methods: {
@@ -47,6 +47,7 @@
     <div class="last">{{ last }}</div>
     <div class="sex">{{ sex }}</div>
     <div v-if="ageFlag && age">{{ age }}</div>
+    <div v-if="this.user.friends_count"> total friends: {{ this.user.friends_count }}</div>
   </div>
   <div v-if="canDelete"
        class="cross"

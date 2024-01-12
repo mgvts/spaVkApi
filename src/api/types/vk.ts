@@ -18,8 +18,8 @@ export type VkUser = {
     sex: Sex,
     friends_count?: number,
     sourceFriends?: VkUser[],
-    deactivated ?: string,
-    bdate ?: dateString
+    deactivated?: string,
+    bdate?: dateString
 }
 /*
 https://dev.vk.com/ru/reference/objects/post
@@ -37,7 +37,7 @@ https://dev.vk.com/ru/reference/objects/attachments-wall
 */
 export type VkAttachment = {
     type: VkAttachmentType
-    photo?:VkPhoto,
+    photo?: VkPhoto,
 }
 
 /*
@@ -68,3 +68,10 @@ export enum Sex {
 }
 
 export type URL = string
+/*
+https://dev.vk.com/ru/reference/objects/user#counters
+ */
+export type VKUserCounters = {
+    friends: number
+    [key: string]: number
+}

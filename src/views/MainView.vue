@@ -2,19 +2,21 @@
     import {defineComponent, PropType} from 'vue';
     import Finder from "@/views/Finder.vue";
     import SourceMain from "@/views/SourceMain.vue";
-    import {VkMapUsers, VkUser} from "@/api/types/vk";
+    import type {VkMapUsers, VkUser, VKUserCounters} from "@/api/types/vk";
     import FriendsMain from "@/views/FriendsMain.vue";
     import UserPage from "@/views/UserPage.vue";
+    import * as _ from 'lodash'
 
     export default defineComponent({
         name: "MainView",
         components: {Finder, SourceMain, FriendsMain, UserPage},
         data() {
             return {
-                sourceUsers: {} as PropType<VkMapUsers>,
-                usersFriends: {} as PropType<VkMapUsers>,
+                sourceUsers: {} as VkMapUsers,
+                usersFriends: {} as VkMapUsers,
                 currentUser: null,
                 token: '',
+                friendsItems: [] as VkUser[]
             }
         },
         methods: {
@@ -29,16 +31,42 @@
                 this.getFriends(this.sourceUsers)
             },
             getFriendsImpl(sourceUser: VkUser): void {
+
                 // doesn't work if user have more than 5000 friends
-                (() => (VK.Api.call("friends.get", {
+                (VK.Api.call("friends.get", {
                     user_id: sourceUser.id,
                     fields: "photo_50,sex,bdate",
-                    v:  import.meta.env.VITE_VK_VER,
+                    v: import.meta.env.VITE_VK_VER,
                 }, (r) => {
-                    this.updateFriends(sourceUser, (r.response.items as VkUser[]).filter(u => !u.deactivated))
-                })))()
+                    let friendsItems = (r.response.items as VkUser[]).filter(u => !u.deactivated)
+                    this.updateFriends(sourceUser, friendsItems)
+                    console.log(friendsItems)
+                    // https://dev.vk.com/ru/api/api-requests#%D0%A7%D0%B0%D1%81%D1%82%D0%BE%D1%82%D0%BD%D1%8B%D0%B5%20%D0%BE%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D0%BD%D0%B8%D1%8F
+                    this.getCount(friendsItems, friendsItems.map(u => u.id))
+                }))
+            },
+            async getCount(friendsItems, uids) {
+                const call = (uid) => {
+                    console.log(uid)
+                    VK.Api.call("users.get", {
+                        user_ids: uid,
+                        fields: "counters",
+                        v: import.meta.env.VITE_VK_VER,
+                    }, (r) => {
+                        console.log(r)
+                        this.usersFriends[uid]['friends_count'] = (r.response[0].counters as VKUserCounters).friends
+                    })
+                }
+                function sleep(ms) {
+                    return new Promise(r => setTimeout(r, ms))
+                }
+                for (let u of uids) {
+                    call(u)
+                    await sleep(3000/5)
+                }
             },
             getFriends(sourceUsers: VkMapUsers): void {
+                //build objects
                 Object.values(sourceUsers).forEach(u => this.getFriendsImpl(u))
             },
             updateFriends(source: VkUser, friends: VkUser[]) {
@@ -63,7 +91,7 @@
                 })
             },
             delSource(u: VkUser): void {
-              delete this.sourceUsers[u.id]
+                delete this.sourceUsers[u.id]
             }
         },
     })

@@ -14,7 +14,9 @@
                 type: Object as PropType<VkUser[]>,
                 require: true
             },
-            totalSource: Number
+            totalSource: Number,
+            alreadyLoad: Number,
+            nowLoadUser: String
         },
         computed: {
             orderedUsers: function (): VkUser[] {
@@ -39,6 +41,8 @@
 <div class="friends-page">
   <div class="header">
     <div> source friends</div>
+    <div> already load {{ alreadyLoad }}/{{ Object.values(users).length }}</div>
+    <div>now loading:{{ nowLoadUser }}</div>
   </div>
   <UserInlineList
     :age="true"

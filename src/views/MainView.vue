@@ -1,11 +1,10 @@
 <script lang=ts>
-    import {defineComponent, PropType} from 'vue';
+    import {defineComponent} from 'vue';
     import Finder from "@/views/Finder.vue";
     import SourceMain from "@/views/SourceMain.vue";
     import type {VkMapUsers, VkUser, VKUserCounters} from "@/api/types/vk";
     import FriendsMain from "@/views/FriendsMain.vue";
     import UserPage from "@/views/UserPage.vue";
-    import * as _ from 'lodash'
 
     export default defineComponent({
         name: "MainView",
@@ -16,12 +15,14 @@
                 usersFriends: {} as VkMapUsers,
                 currentUser: null,
                 token: '',
-                friendsItems: [] as VkUser[]
+                friendsItems: [] as VkUser[],
+                loadFriends: 0,
+                nowLoad: '',
+                errorQueue: new Set()
             }
         },
         methods: {
             addUser(u: VkUser): void {
-                console.log(u)
                 if (this.sourceUsers[u.id]) return
                 this.sourceUsers[u.id] = u
             },
@@ -30,40 +31,56 @@
                 this.usersFriends = {}
                 this.getFriends(this.sourceUsers)
             },
-            getFriendsImpl(sourceUser: VkUser): void {
-
+            getFriendsImpl(sourceUser: VkUser): Promise<void> {
                 // doesn't work if user have more than 5000 friends
-                (VK.Api.call("friends.get", {
+                VK.Api.call("friends.get", {
                     user_id: sourceUser.id,
                     fields: "photo_50,sex,bdate",
                     v: import.meta.env.VITE_VK_VER,
                 }, (r) => {
-                    let friendsItems = (r.response.items as VkUser[]).filter(u => !u.deactivated)
-                    this.updateFriends(sourceUser, friendsItems)
-                    console.log(friendsItems)
-                    // https://dev.vk.com/ru/api/api-requests#%D0%A7%D0%B0%D1%81%D1%82%D0%BE%D1%82%D0%BD%D1%8B%D0%B5%20%D0%BE%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D0%BD%D0%B8%D1%8F
-                    this.getCount(friendsItems, friendsItems.map(u => u.id))
-                }))
+                    if (r.response) {
+                        let friendsItems = (r.response.items as VkUser[]).filter(u => !u.deactivated)
+                        this.updateFriends(sourceUser, friendsItems)
+                        // https://dev.vk.com/ru/api/api-requests#%D0%A7%D0%B0%D1%81%D1%82%D0%BE%D1%82%D0%BD%D1%8B%D0%B5%20%D0%BE%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%B5%D0%BD%D0%B8%D1%8F
+                        this.getCount(friendsItems.map(u => u.id))
+                    }
+                    if (r.error) {
+                        console.error(`user ${sourceUser.first_name} ${sourceUser.last_name}`)
+                        console.error(r.error.error_msg)
+                    }
+                })
             },
-            async getCount(friendsItems, uids) {
+            async getCount(uids) {
                 const call = (uid) => {
-                    console.log(uid)
                     VK.Api.call("users.get", {
                         user_ids: uid,
                         fields: "counters",
                         v: import.meta.env.VITE_VK_VER,
                     }, (r) => {
-                        console.log(r)
-                        this.usersFriends[uid]['friends_count'] = (r.response[0].counters as VKUserCounters).friends
+                        if (r.response) {
+                            this.usersFriends[uid]['friends_count'] = (r.response[0].counters as VKUserCounters).friends
+                            this.loadFriends += 1
+                            this.nowLoad = `${r.response[0].first_name} ${r.response[0].last_name}`
+                        }
+                        if (r.error) {
+                            this.errorQueue.add(uid)
+                        }
                     })
-                }
-                function sleep(ms) {
-                    return new Promise(r => setTimeout(r, ms))
                 }
                 for (let u of uids) {
                     call(u)
-                    await sleep(3000/5)
+                    await this.sleep(3500 / 5)
                 }
+                if (this.errorQueue.length != 0 ) {
+                    for (let u in this.errorQueue) {
+                        call(u)
+                        if (this.usersFriends[u]['friends_count']) this.errorQueue.delete(u)
+                        await this.sleep(3500 / 5)
+                    }
+                }
+            },
+            sleep(ms) {
+                return new Promise(r => setTimeout(r, ms))
             },
             getFriends(sourceUsers: VkMapUsers): void {
                 //build objects
@@ -122,6 +139,8 @@
     />
     <FriendsMain
       v-if="usersFriends"
+      :alreadyLoad="loadFriends"
+      :now-load-user="nowLoad"
       class="friends-page"
       :users="Object.values(usersFriends)"
       :totalSource="Object.keys(sourceUsers).length"
